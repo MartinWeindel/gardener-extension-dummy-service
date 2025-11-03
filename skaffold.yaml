@@ -1,0 +1,61 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: dummy-service
+build:
+  insecureRegistries:
+    - garden.local.gardener.cloud:5001
+  tagPolicy:
+    customTemplate:
+      template: "{{.version}}-{{.sha}}"
+      components:
+        - name: version
+          envTemplate:
+            template: "{{.EXTENSION_VERSION}}"
+        - name: sha
+          gitCommit:
+            variant: AbbrevCommitSha
+  artifacts:
+    - image: local-skaffold/gardener-extension-dummy-service
+      ko:
+        dependencies:
+          paths:
+            - cmd/gardener-extension-dummy-service
+            - cmd/gardener-extension-dummy-service/app
+            - pkg/apis/config
+            - pkg/apis/config/v1alpha1
+            - pkg/apis/config/validation
+            - pkg/apis/service
+            - pkg/apis/service/install
+            - pkg/apis/service/v1alpha1
+            - pkg/apis/service/validation
+            - pkg/cmd
+            - pkg/constants
+            - pkg/controller/healthcheck
+            - pkg/controller/lifecycle
+            - VERSION
+        ldflags:
+          - '{{.LD_FLAGS}}'
+        main: ./cmd/gardener-extension-dummy-service
+    - image: local-skaffold/gardener-extension-dummy-service/charts/extension
+      custom:
+        buildCommand: |
+          bash {{.EXTENSION_GARDENER_HACK_DIR}}/push-helm.sh charts/gardener-extension-dummy-service .skaffoldImage
+        dependencies:
+          paths:
+            - charts/gardener-extension-dummy-service
+      requires:
+        - image: local-skaffold/gardener-extension-dummy-service
+          alias: IMG
+resourceSelector:
+  allow:
+    # instruct skaffold to inject the built image reference into the image fields in our Extension object
+    - groupKind: Extension.operator.gardener.cloud
+      image:
+        - .spec.deployment.extension.helm.ociRepository.ref
+manifests:
+  kustomize:
+    paths:
+      - dev/extension
+deploy:
+  kubectl: {}

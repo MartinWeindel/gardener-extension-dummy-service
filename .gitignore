@@ -1,0 +1,26 @@
+/.kube-secrets
+/tmp
+/dev
+/local
+**/dev
+/hack/tools/bin
+/gardener
+
+*.coverprofile
+*.html
+.vscode
+.idea/
+!.idea/copyright/
+.DS_Store
+*~
+
+TODO
+
+# Virtual go & fuse
+.virtualgo
+.fuse_hidden*
+
+.go-version
+
+# gosec
+gosec-report.sarif

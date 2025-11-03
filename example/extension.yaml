@@ -1,0 +1,44 @@
+apiVersion: operator.gardener.cloud/v1alpha1
+kind: Extension
+metadata:
+  annotations:
+    security.gardener.cloud/pod-security-enforce: baseline
+  name: extension-dummy-service
+spec:
+  deployment:
+    extension:
+      helm:
+        ociRepository:
+          ref: europe-docker.pkg.dev/gardener-project/public/charts/gardener/extensions/shoot-cert-service:v0.1-dev
+      injectGardenKubeconfig: true
+      policy: Always
+      runtimeClusterValues:
+        certificateConfig:
+          defaultIssuer:
+            acme:
+              email: some.user@example.com
+              server: https://acme-v02.api.letsencrypt.org/directory
+            name: garden
+      values:
+        certificateConfig:
+          defaultIssuer:
+            acme:
+              email: some.user@example.com
+              server: https://acme-v02.api.letsencrypt.org/directory
+            name: garden
+  resources:
+  - autoEnable:
+    - shoot
+    clusterCompatibility:
+    - shoot
+    kind: Extension
+    type: shoot-cert-service
+    workerlessSupported: true
+  - clusterCompatibility:
+    - garden
+    - seed
+    kind: Extension
+    lifecycle:
+      delete: AfterKubeAPIServer
+      reconcile: BeforeKubeAPIServer
+    type: controlplane-cert-service

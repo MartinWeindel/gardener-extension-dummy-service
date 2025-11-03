@@ -1,0 +1,51 @@
+image:
+  repository: my.repo.example.com/my-project/dummy-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+leaderElection:
+  resourceLock: leases
+
+# settings for metrics, e.g. scraping by seed-prometheus
+metrics:
+  enableScraping: true
+  # default metrics endpoint in controller-runtime
+  port: 8080
+
+webhookConfig:
+  serverPort: 10250
+
+resources: {}
+
+vpa:
+  enabled: true
+  # resourcePolicy:
+  #   minAllowed:
+  #     memory: 128Mi
+  updatePolicy:
+    updateMode: "Recreate"
+
+controllers:
+  concurrentSyncs: 5
+  ignoreOperationAnnotation: false
+  healthcheck:
+    concurrentSyncs: 5
+  heartbeat: 
+    renewIntervalSeconds: 30
+
+serviceConfig:
+  bar: default-bar
+
+disableControllers: []
+
+# imageVectorOverwrite: |
+#   images:
+#   - name: cert-management
+#     sourceRepository: github.com/gardener/cert-management
+#     repository: europe-docker.pkg.dev/gardener-project/cert-controller-manager
+#     tag: "0.2.9"
+
+gardener:
+  version: ""
+  seed:
+    name: ""

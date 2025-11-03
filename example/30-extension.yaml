@@ -1,0 +1,12 @@
+---
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: Extension
+metadata:
+  name: dummy-service
+  namespace: shoot--foo--bar
+spec:
+  type: shoot-cert-service
+  providerConfig:
+    apiVersion: service.dummy.extensions.gardener.cloud/v1alpha1
+    kind: DummyConfig
+    foo: foo-value

@@ -1,0 +1,19 @@
+apiVersion: operator.gardener.cloud/v1alpha1
+kind: Extension
+metadata:
+  annotations:
+    security.gardener.cloud/pod-security-enforce: baseline
+  name: extension-dummy-service
+spec:
+  deployment:
+    extension:
+      policy: Always
+      injectGardenKubeconfig: true
+  resources:
+  - autoEnable:
+    - shoot
+    clusterCompatibility:
+    - shoot
+    kind: Extension
+    type: dummy-service
+    workerlessSupported: true
