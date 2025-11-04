@@ -49,5 +49,6 @@ spec:
         ociRepository:
           ref: local-skaffold/gardener-extension-dummy-service/charts/extension:v0.0.0
       values:
-        bar: skaffold-bar
+        serviceConfig:
+            bar: skaffold-bar
 EOF

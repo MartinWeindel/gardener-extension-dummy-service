@@ -96,7 +96,7 @@ func (a *actuator) Reconcile(ctx context.Context, _ logr.Logger, ex *extensionsv
 		"bar": ptr.Deref(a.serviceConfig.Bar, "<unset>"),
 	}
 
-	shootResources, err := getShootResources(namespace, dummyData)
+	shootResources, err := getShootResources("kube-system", dummyData)
 	if err != nil {
 		return err
 	}
